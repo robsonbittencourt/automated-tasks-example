@@ -1,6 +1,7 @@
 package controller;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -26,6 +27,6 @@ public class IndexControllerTest {
 	@Test
 	public void shouldRedirectToIndexPageWhenRequestIndexUrl() {
 		controller.index();
-		verify(result).include(any(Double.class));
+		verify(result).include(eq("version"), any(Double.class));
 	}
 }

@@ -17,6 +17,7 @@
 	<div class="jumbotron">
 		<div class="container">
 			<h1>Automated Tasks Example</h1>
+			<h3>Version: ${version}</h3>
 		</div>
 
 		<div class="container nav-menu">

@@ -9,12 +9,14 @@ import com.google.inject.Inject;
 @Resource
 public class IndexController {
 	
+	private static final double VERSION = 0.2;
+	
 	@Inject
 	private Result result;
 	
 	@Get("/index")
 	public void index() {
-		result.include(0.1);
+		result.include("version", VERSION);
 	}
 
 }
