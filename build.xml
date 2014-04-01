@@ -1,0 +1,123 @@
+<project name="automated-tasks-example" basedir="." default="war">
+
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="test.dir" value="${basedir}/test" />
+
+	<property name="bin.dir" value="${basedir}/bin" />
+	<property name="bin.test.dir" value="${bin.dir}/tests" />
+	<property name="bin.emma.dir" value="${bin.dir}/emma" />
+
+	<property name="lib.dir" value="${basedir}/WebContent/WEB-INF/lib" />
+	<property name="lib.build.dir" value="${basedir}/WebContent/WEB-INF/lib-build" />
+
+	<property name="war.dist.dir" value="${bin.dir}/war" />
+	<property name="war.classes.dir" value="${war.dist.dir}/WEB-INF/classes" />
+	<property name="war.webxml.file" value="${war.dist.dir}/WEB-INF/web.xml" />
+
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="dist.metrics.dir" value="${dist.dir}/metrics" />
+	<property name="dist.war.file" value="${dist.dir}/AutomatedTasksExample.war" />
+	<property name="dist.junit.dir" value="${dist.metrics.dir}/junit" />
+	<property name="dist.emma.dir" value="${dist.metrics.dir}/emma" />
+
+
+	<!-- Defining classpath project-->
+	<path id="project.classpath">
+		<pathelement location="${war.classes.dir}" />
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${lib.build.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="resolve-tasks">
+		<taskdef resource="emma_ant.properties" classpathref="project.classpath" />
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="project.classpath" />
+	</target>
+
+	<!-- Initialize(delete/create) all directories to be used -->
+	<target name="clean" depends="resolve-tasks">
+		<delete dir="${bin.dir}" />
+		<delete dir="${dist.dir}" />
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${war.classes.dir}" />
+		<mkdir dir="${bin.test.dir}" />
+		<mkdir dir="${bin.emma.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.metrics.dir}" />
+		<mkdir dir="${dist.emma.dir}" />
+		<mkdir dir="${dist.junit.dir}" />
+	</target>
+
+	<!-- Compile the current source code -->
+	<target name="compile" depends="clean">
+		<javac debug="on" srcdir="${src.dir}" destdir="${war.classes.dir}" encoding="UTF-8">
+			<classpath refid="project.classpath" />
+		</javac>
+		<copy todir="${war.classes.dir}">
+			<fileset file="${basedir}/*.properties" />
+		</copy>
+	</target>
+
+	<!-- Compile the test source control -->
+	<target name="compile-tests" depends="compile">
+		<javac debug="on" srcdir="${test.dir}" destdir="${bin.test.dir}" encoding="UTF-8">
+			<classpath refid="project.classpath" />
+			<classpath path="${war.classes.dir}" />
+		</javac>
+	</target>
+
+	<!-- compile-emma all classes using Emma plugin -->
+	<target name="compile-emma" depends="compile-tests">
+		<emma>
+			<instr instrpath="${war.classes.dir}" destdir="${bin.emma.dir}" metadatafile="${dist.emma.dir}/metadata.em" merge="true" mode="fullcopy" />
+		</emma>
+		<copy todir="${bin.emma.dir}/classes">
+			<fileset dir="${bin.test.dir}" />
+		</copy>
+		<copy todir="${bin.emma.dir}">
+			<fileset file="${basedir}/*.properties" />
+		</copy>
+	</target>
+
+	<!-- Run suite case tests -->
+	<target name="tests" depends="compile-emma">
+		<junit haltonfailure="false" haltonerror="false" fork="true" printsummary="yes" failureproperty="unit.test.failure">
+			<classpath>
+				<pathelement location="${bin.emma.dir}/classes" />
+				<path refid="project.classpath" />
+			</classpath>
+			<formatter type="xml" />
+			<jvmarg value="-Demma.coverage.out.file=${dist.emma.dir}/coverage.ec" />
+			<jvmarg value="-Demma.coverage.out.merge=true" />
+			<jvmarg value="-XX:-UseSplitVerifier" />
+			<batchtest fork="yes" todir="${dist.junit.dir}">
+				<fileset dir="${bin.emma.dir}/classes">
+					<include name="**/*Test.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<junitreport todir="${dist.junit.dir}">
+			<fileset dir="${dist.junit.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${dist.junit.dir}" />
+		</junitreport>
+		<fail message="At least one unit test has failed" if="unit.test.failure" />
+	</target>
+
+	<!-- Compress the app and generate the war file -->
+	<target name="war" depends="compile, tests">
+		<copy todir="${war.dist.dir}">
+			<fileset dir="${basedir}/WebContent" excludes="**/classes/" />
+		</copy>
+		<java classpathref="project.classpath" classname="br.com.caelum.vraptor.scan.VRaptorStaticScanning" fork="true">
+			<arg value="${war.webxml.file}" />
+			<classpath path="${war.classes.dir}" />
+		</java>
+		<war destfile="${dist.war.file}" basedir="${war.dist.dir}" compress="true" webxml="${war.webxml.file}" />
+	</target>
+
+</project>
