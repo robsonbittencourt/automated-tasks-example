@@ -11,8 +11,8 @@ Download Jenkins [here](http://jenkins-ci.org/)
 * [english](http://www.uvd.co.uk/blog/labs/configuring-jenkins-continuous-integration-server-to-work-with-git/)
 
 
-## Running Sonarqube
-Download Sonarquebe and Sonar Runner [here](http://www.sonarqube.org/downloads/)
+## Running SonarQube
+Download SonarQube and Sonar Runner [here](http://www.sonarqube.org/downloads/)
 
 #### Tutorials
 * [portuguese](http://umovme.cc/2013/09/02/analise-de-codigo-utilizando-sonarqube/)
