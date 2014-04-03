@@ -14,7 +14,7 @@ public class IndexController {
 	@Inject
 	private Result result;
 	
-	@Get("/index")
+	@Get("/")
 	public void index() {
 		result.include("version", VERSION);
 	}
