@@ -16,7 +16,7 @@ public class IndexController {
 	
 	@Get("/")
 	public void index() {
-		result.include("version-app", VERSION);
+		result.include("version", VERSION);
 	}
 
 }
