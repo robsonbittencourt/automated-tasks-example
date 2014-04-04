@@ -1,7 +1,7 @@
 # automated-tasks-example
 =======================
 
-A simple example project to demonstrate some techniques build automation, deployment and testing.
+A simple example project to demonstrate some techniques build automation, deployment and testing. 
 
 ## Running Jenkins
 Download Jenkins [here](http://jenkins-ci.org/)
