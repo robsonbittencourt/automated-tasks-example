@@ -9,7 +9,7 @@ import com.google.inject.Inject;
 @Resource
 public class IndexController {
 	
-	private static final double VERSION = 0.1;
+	private static final double VERSION = 0.2;
 	
 	@Inject
 	private Result result;
