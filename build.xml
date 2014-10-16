@@ -16,7 +16,7 @@
 
 	<property name="dist.dir" value="${basedir}/dist" />
 	<property name="dist.metrics.dir" value="${dist.dir}/metrics" />
-	<property name="dist.war.file" value="${dist.dir}/AutomatedTasksExample.war" />
+	<property name="dist.war.file" value="${dist.dir}/automated-tasks-example.war" />
 	<property name="dist.junit.dir" value="${dist.metrics.dir}/junit" />
 	<property name="dist.emma.dir" value="${dist.metrics.dir}/emma" />
 
