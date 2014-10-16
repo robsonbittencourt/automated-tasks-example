@@ -27,6 +27,6 @@ public class IndexControllerTest {
 	@Test
 	public void shouldRedirectToIndexPageWhenRequestIndexUrl() {
 		controller.index();
-		verify(result).include(eq("version"), any(Double.class));
+		verify(result).include(eq("versicon"), any(Double.class));
 	}
 }
