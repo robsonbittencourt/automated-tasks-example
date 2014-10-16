@@ -92,6 +92,7 @@
 			<formatter type="xml" />
 			<jvmarg value="-Demma.coverage.out.file=${dist.emma.dir}/coverage.ec" />
 			<jvmarg value="-Demma.coverage.out.merge=true" />
+			<jvmarg>-XX:-UseSplitVerifier</jvmarg>
 			<batchtest fork="yes" todir="${dist.junit.dir}">
 				<fileset dir="${bin.emma.dir}/classes">
 					<include name="**/*Test.class" />
